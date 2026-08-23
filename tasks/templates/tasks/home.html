@@ -6,9 +6,23 @@
 </head>
 <body>
 
-    <h1>Hello, Task Manager!</h1>
+    <h1>Hello, {{ name }}!</h1>
 
-    <p>My personal task manager is working.</p>
+    <h2>Your Tasks</h2>
+
+    {% if tasks %}
+
+        <ul>
+            {% for task in tasks %}
+                <li>{{ task.title }}</li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+
+        <p>You have no tasks.</p>
+
+    {% endif %}
 
 </body>
 </html>
