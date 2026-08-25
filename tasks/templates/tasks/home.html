@@ -8,6 +8,26 @@
 
     <h1>Hello, {{ name }}!</h1>
 
+    <h2>Add a Task</h2>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label for="title">Task:</label>
+        <input type="text" id="title" name="title" required>
+
+        <br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+
+        <br><br>
+
+        <button type="submit">Add Task</button>
+
+    </form>
+
     <h2>Your Tasks</h2>
 
     {% if tasks %}
