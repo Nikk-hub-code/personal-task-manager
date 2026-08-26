@@ -12,33 +12,19 @@
 
         {% csrf_token %}
 
-        <label for="title">Task:</label>
-        <input type="text" id="title" name="title" required>
+        {{ form.as_p }}
 
-        <br><br>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea>
-
-        <br><br>
-
-        <label for="priority">Priority:</label>
-
-        <select id="priority" name="priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-        </select>
-
-        <br><br>
-
-        <button type="submit">Create Task</button>
+        <button type="submit">
+            Create Task
+        </button>
 
     </form>
 
     <br>
 
-    <a href="{% url 'task_list' %}">Back to Tasks</a>
+    <a href="{% url 'task_list' %}">
+        Back to Tasks
+    </a>
 
 </body>
 </html>
