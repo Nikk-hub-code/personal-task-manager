@@ -24,6 +24,16 @@
 
         <br><br>
 
+        <label for="priority">Priority:</label>
+
+        <select id="priority" name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <br><br>
+
         <button type="submit">Add Task</button>
 
     </form>
@@ -34,7 +44,9 @@
 
         <ul>
             {% for task in tasks %}
-                <li>{{ task.title }}</li>
+                <li>
+                    {{ task.title }} - {{ task.priority }}
+                </li>
             {% endfor %}
         </ul>
 
