@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
+
 from .models import Task
 
 
@@ -12,23 +13,26 @@ def task_list(request):
 
     return render(request, "tasks/home.html", context)
 
-def task_create(request):
 
+def task_create(request):
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
         priority = request.POST.get("priority")
 
         Task.objects.create(
-            title = title,
-            description = description,
-            priority = priority
+            title=title,
+            description=description,
+            priority=priority
         )
 
         return redirect("task_list")
 
+    return render(request, "tasks/task_form.html")
+
+
 def task_detail(request, task_id):
-    task = get_object_or_404(Task, id = task_id)
+    task = get_object_or_404(Task, id=task_id)
 
     context = {
         "task": task
@@ -36,8 +40,9 @@ def task_detail(request, task_id):
 
     return render(request, "tasks/task_detail.html", context)
 
+
 def task_edit(request, task_id):
-    task = get_object_or_404(Task, id = task_id)
+    task = get_object_or_404(Task, id=task_id)
 
     if request.method == "POST":
         task.title = request.POST.get("title")
@@ -47,12 +52,29 @@ def task_edit(request, task_id):
 
         task.save()
 
-        return redirect("task_detail", task_id = task.id)
+        return redirect("task_detail", task_id=task.id)
 
     context = {
-        "task" : task,
+        "task": task,
     }
 
     return render(request, "tasks/task_edit.html", context)
 
-    return render(request, "tasks/task_form.html")
+
+def task_delete(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    if request.method == "POST":
+        task.delete()
+
+        return redirect("task_list")
+
+    context = {
+        "task": task,
+    }
+
+    return render(
+        request,
+        "tasks/task_confirm_delete.html",
+        context
+    )
