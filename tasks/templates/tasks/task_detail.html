@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ task.title }}</title>
+</head>
+<body>
+
+    <h1>{{ task.title }}</h1>
+
+    <p>
+        <strong>Description:</strong>
+        {{ task.description }}
+    </p>
+
+    <p>
+        <strong>Priority:</strong>
+        {{ task.get_priority_display }}
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+
+        {% if task.completed %}
+            Completed
+        {% else %}
+            Pending
+        {% endif %}
+    </p>
+
+    <p>
+        <strong>Created:</strong>
+        {{ task.created_at }}
+    </p>
+
+    <p>
+        <strong>Last Updated:</strong>
+        {{ task.updated_at }}
+    </p>
+
+    <br>
+
+    <a href="{% url 'task_list' %}">← Back to Tasks</a>
+
+</body>
+</html>
