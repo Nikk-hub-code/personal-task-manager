@@ -8,35 +8,7 @@
 
     <h1>Hello, {{ name }}!</h1>
 
-    <h2>Add a Task</h2>
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        <label for="title">Task:</label>
-        <input type="text" id="title" name="title" required>
-
-        <br><br>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea>
-
-        <br><br>
-
-        <label for="priority">Priority:</label>
-
-        <select id="priority" name="priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-        </select>
-
-        <br><br>
-
-        <button type="submit">Add Task</button>
-
-    </form>
+    <a href="{% url 'task_create' %}">+ Add Task</a>
 
     <h2>Your Tasks</h2>
 
@@ -45,7 +17,7 @@
         <ul>
             {% for task in tasks %}
                 <li>
-                    {{ task.title }} - {{ task.priority }}
+                    {{ task.title }} — {{ task.priority }}
                 </li>
             {% endfor %}
         </ul>
