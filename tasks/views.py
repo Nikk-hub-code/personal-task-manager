@@ -4,7 +4,24 @@ from .forms import TaskForm
 
 
 def task_list(request):
+    status = request.GET.get("status")
+    priority = request.GET.get("priority")
+    sort = request.GET.get("sort")
+
     tasks = Task.objects.all()
+
+    if status:
+        tasks = tasks.filter(status=status)
+
+    if priority:
+        tasks = tasks.filter(priority=priority)
+
+    if sort == "oldest":
+        tasks = tasks.order_by("created_at")
+    elif sort == "due_date":
+        tasks = tasks.order_by("due_date")
+    else:
+        tasks = tasks.order_by("-created_at")
 
     context = {
         "name": "Kaushal",

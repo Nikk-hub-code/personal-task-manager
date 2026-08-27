@@ -12,6 +12,44 @@
 
     <h2>Your Tasks</h2>
 
+    <div>
+        <a href="{% url 'task_list' %}">All</a>
+
+        <a href="?status=pending">Pending</a>
+
+        <a href="?status=in_progress">In Progress</a>
+
+        <a href="?status=completed">Completed</a>
+    </div>
+
+    <div>
+        <strong>Priority:</strong>
+
+        <a href="{% url 'task_list' %}">All</a>
+
+        <a href="?status={{ request.GET.status }}&priority=high">High</a>
+
+        <a href="?status={{ request.GET.status }}&priority=medium">Medium</a>
+
+        <a href="?status={{ request.GET.status }}&priority=low">Low</a>
+    </div>
+
+    <div>
+        <strong>Sort:</strong>
+
+        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&sort=newest">
+            Newest
+        </a>
+
+        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&sort=oldest">
+            Oldest
+        </a>
+
+        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&sort=due_date">
+            Due Date
+        </a>
+    </div>
+
     {% if tasks %}
 
         <ul>
