@@ -1,5 +1,4 @@
 from django import forms
-
 from .models import Task
 
 
@@ -11,13 +10,20 @@ class TaskForm(forms.ModelForm):
             "title",
             "description",
             "priority",
-            "completed",
+            "status",
+            "due_date",
         ]
 
-    def clean_title(self):
-        title = self.cleaned_data["title"]
+        widgets = {
+            "due_date": forms.DateInput(
+                attrs={
+                    "type": "date",
+                }
+            ),
+        }
 
-        title = title.strip()
+    def clean_title(self):
+        title = self.cleaned_data["title"].strip()
 
         if len(title) < 3:
             raise forms.ValidationError(
@@ -27,9 +33,7 @@ class TaskForm(forms.ModelForm):
         return title
 
     def clean_description(self):
-        description = self.cleaned_data.get("description", "")
-
-        description = description.strip()
+        description = self.cleaned_data.get("description", "").strip()
 
         if description and len(description) < 5:
             raise forms.ValidationError(

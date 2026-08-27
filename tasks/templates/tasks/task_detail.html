@@ -20,11 +20,16 @@
 
     <p>
         <strong>Status:</strong>
+        {{ task.get_status_display }}
+    </p>
 
-        {% if task.completed %}
-            Completed
+    <p>
+        <strong>Due Date:</strong>
+
+        {% if task.due_date %}
+            {{ task.due_date }}
         {% else %}
-            Pending
+            No due date
         {% endif %}
     </p>
 
