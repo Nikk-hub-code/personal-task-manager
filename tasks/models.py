@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Task(models.Model):
@@ -14,6 +15,12 @@ class Task(models.Model):
         ("in_progress", "In Progress"),
         ("completed", "Completed"),
     ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="tasks",
+    )
 
     title = models.CharField(max_length=200)
 

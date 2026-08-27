@@ -1,14 +1,15 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Task
 from .forms import TaskForm
 
-
+@login_required
 def task_list(request):
     status = request.GET.get("status")
     priority = request.GET.get("priority")
     sort = request.GET.get("sort")
 
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(user=request.user)
 
     if status:
         tasks = tasks.filter(status=status)
@@ -31,14 +32,16 @@ def task_list(request):
     return render(request, "tasks/home.html", context)
 
 
+@login_required
 def task_create(request):
 
     if request.method == "POST":
         form = TaskForm(request.POST)
 
         if form.is_valid():
-            form.save()
-
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
             return redirect("task_list")
 
     else:
@@ -51,8 +54,9 @@ def task_create(request):
     return render(request, "tasks/task_form.html", context)
 
 
+@login_required
 def task_detail(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
 
     context = {
         "task": task
@@ -60,10 +64,10 @@ def task_detail(request, task_id):
 
     return render(request, "tasks/task_detail.html", context)
 
-
+@login_required
 def task_edit(request, task_id):
 
-    task = get_object_or_404(Task, id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
 
     if request.method == "POST":
         form = TaskForm(request.POST, instance=task)
@@ -83,9 +87,9 @@ def task_edit(request, task_id):
 
     return render(request, "tasks/task_edit.html", context)
 
-
+@login_required
 def task_delete(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
 
     if request.method == "POST":
         task.delete()
