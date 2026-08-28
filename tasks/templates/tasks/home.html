@@ -12,6 +12,19 @@
 
     <a href="{% url 'dashboard' %}">Dashboard</a>
 
+    <form method="get">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search tasks..."
+            value="{{ request.GET.search|default:'' }}"
+        >
+
+        <button type="submit">Search</button>
+
+    </form>
+
     <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit">Logout</button>
@@ -22,11 +35,11 @@
     <div>
         <a href="{% url 'task_list' %}">All</a>
 
-        <a href="?status=pending">Pending</a>
+        <a href="?status=pending&search={{ request.GET.search }}">Pending</a>
 
-        <a href="?status=in_progress">In Progress</a>
+        <a href="?status=in_progress&search={{ request.GET.search }}">In Progress</a>
 
-        <a href="?status=completed">Completed</a>
+        <a href="?status=completed&search={{ request.GET.search }}">Completed</a>
     </div>
 
     <div>
@@ -34,27 +47,29 @@
 
         <a href="{% url 'task_list' %}">All</a>
 
-        <a href="?status={{ request.GET.status }}&priority=high">High</a>
+        <a href="?status={{ request.GET.status }}&priority=high&search={{ request.GET.search }}">High</a>
 
-        <a href="?status={{ request.GET.status }}&priority=medium">Medium</a>
+        <a href="?status={{ request.GET.status }}&priority=medium&search={{ request.GET.search }}">Medium</a>
 
-        <a href="?status={{ request.GET.status }}&priority=low">Low</a>
+        <a href="?status={{ request.GET.status }}&priority=low&search={{ request.GET.search }}">Low</a>
     </div>
 
     <div>
         <strong>Sort:</strong>
 
-        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&sort=newest">
-            Newest
+        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=oldest">
+            Oldest First
         </a>
 
-        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&sort=oldest">
-            Oldest
-        </a>
-
-        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&sort=due_date">
+        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=due_date">
             Due Date
         </a>
+
+        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=newest">
+            Newest First
+        </a>
+
+        <a href="{% url 'task_list' %}">Clear Filters</a>
     </div>
 
     {% if tasks %}

@@ -9,6 +9,7 @@ def task_list(request):
     status = request.GET.get("status")
     priority = request.GET.get("priority")
     sort = request.GET.get("sort")
+    search = request.GET.get("search")
 
     tasks = Task.objects.filter(user=request.user)
 
@@ -17,6 +18,11 @@ def task_list(request):
 
     if priority:
         tasks = tasks.filter(priority=priority)
+
+    if search:
+        tasks = tasks.filter(
+            title__icontains=search
+        )
 
     if sort == "oldest":
         tasks = tasks.order_by("created_at")
