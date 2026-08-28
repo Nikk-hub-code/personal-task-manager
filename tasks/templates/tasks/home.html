@@ -10,6 +10,8 @@
 
     <a href="{% url 'task_create' %}">+ Add Task</a>
 
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+
     <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit">Logout</button>

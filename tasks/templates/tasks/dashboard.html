@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Personal Task Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 800px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                margin: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .navigation {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Welcome to your Dashboard</h1>
+
+        <a href="{% url 'task_list' %}">
+            View Tasks
+        </a>
+    </div>
+
+
+    <!-- Statistics -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <h3>Total</h3>
+            <div class="stat-number">
+                {{ total_tasks }}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending</h3>
+            <div class="stat-number">
+                {{ pending_tasks }}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>In Progress</h3>
+            <div class="stat-number">
+                {{ in_progress_tasks }}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Completed</h3>
+            <div class="stat-number">
+                {{ completed_tasks }}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>High Priority</h3>
+            <div class="stat-number">
+                {{ high_priority_tasks }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Overdue Tasks -->
+
+    <div class="section">
+
+        <h2>Overdue Tasks</h2>
+
+        {% if overdue_tasks %}
+
+            <ul>
+
+                {% for task in overdue_tasks %}
+
+                    <li>
+                        <a href="{% url 'task_detail' task.id %}">
+                            {{ task.title }}
+                        </a>
+
+                        — {{ task.get_priority_display }}
+                        — {{ task.get_status_display }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>No overdue tasks.</p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Due Today -->
+
+    <div class="section">
+
+        <h2>Due Today</h2>
+
+        {% if today_tasks %}
+
+            <ul>
+
+                {% for task in today_tasks %}
+
+                    <li>
+                        <a href="{% url 'task_detail' task.id %}">
+                            {{ task.title }}
+                        </a>
+
+                        — {{ task.get_priority_display }}
+                        — {{ task.get_status_display }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>No tasks due today.</p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Active Tasks -->
+
+    <div class="section">
+
+        <h2>Active Tasks</h2>
+
+        {% if active_tasks %}
+
+            <ul>
+
+                {% for task in active_tasks %}
+
+                    <li>
+                        <a href="{% url 'task_detail' task.id %}">
+                            {{ task.title }}
+                        </a>
+
+                        — {{ task.get_priority_display }}
+                        — {{ task.get_status_display }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>No active tasks.</p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Recently Completed -->
+
+    <div class="section">
+
+        <h2>Recently Completed</h2>
+
+        {% if completed_task_list %}
+
+            <ul>
+
+                {% for task in completed_task_list %}
+
+                    <li>
+                        <a href="{% url 'task_detail' task.id %}">
+                            {{ task.title }}
+                        </a>
+
+                        — Completed
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>No completed tasks yet.</p>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="navigation">
+
+        <a href="{% url 'task_create' %}">
+            + Add New Task
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils import timezone
 from .models import Task
 from .forms import TaskForm
 
@@ -31,6 +32,42 @@ def task_list(request):
 
     return render(request, "tasks/home.html", context)
 
+@login_required
+def dashboard(request):
+    tasks = Task.objects.filter(user=request.user)
+
+    total_tasks = tasks.count()
+    pending_tasks = tasks.filter(status="pending").count()
+    in_progress_tasks = tasks.filter(status="in_progress").count()
+    completed_tasks = tasks.filter(status="completed").count()
+    high_priority_tasks = tasks.filter(priority="high").count()
+
+    active_tasks = tasks.exclude(status="completed").order_by("due_date")
+    completed_task_list = tasks.filter(status="completed").order_by("-updated_at")
+
+    today = timezone.localdate()
+
+    today_tasks = tasks.filter(due_date=today).exclude(status="completed")
+
+    overdue_tasks = tasks.filter(
+        due_date__lt=today
+    ).exclude(
+        status="completed"
+    )
+
+    context = {
+        "total_tasks": total_tasks,
+        "pending_tasks": pending_tasks,
+        "in_progress_tasks": in_progress_tasks,
+        "completed_tasks": completed_tasks,
+        "high_priority_tasks": high_priority_tasks,
+        "active_tasks": active_tasks,
+        "completed_task_list": completed_task_list,
+        "today_tasks": today_tasks,
+        "overdue_tasks": overdue_tasks,
+    }
+
+    return render(request, "tasks/dashboard.html", context)
 
 @login_required
 def task_create(request):
