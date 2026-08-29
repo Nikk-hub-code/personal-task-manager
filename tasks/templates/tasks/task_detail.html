@@ -1,59 +1,133 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ task.title }}</title>
-</head>
-<body>
+{% extends "tasks/base.html" %}
 
-    <h1>{{ task.title }}</h1>
+{% block title %}{{ task.title }}{% endblock %}
 
-    <p>
-        <strong>Description:</strong>
-        {{ task.description }}
-    </p>
+{% block content %}
 
-    <p>
-        <strong>Priority:</strong>
-        {{ task.get_priority_display }}
-    </p>
+<div class="page-header">
 
-    <p>
-        <strong>Status:</strong>
-        {{ task.get_status_display }}
-    </p>
+    <div>
+        <h2>{{ task.title }}</h2>
+        <p class="page-subtitle">
+            Task details
+        </p>
+    </div>
 
-    <p>
-        <strong>Due Date:</strong>
+    <a href="{% url 'task_list' %}" class="button">
+        ← Back to Tasks
+    </a>
 
-        {% if task.due_date %}
-            {{ task.due_date }}
-        {% else %}
-            No due date
-        {% endif %}
-    </p>
+</div>
 
-    <p>
-        <strong>Created:</strong>
-        {{ task.created_at }}
-    </p>
 
-    <p>
-        <strong>Last Updated:</strong>
-        {{ task.updated_at }}
-    </p>
+<div class="detail-card">
 
-    <br>
+    {% if task.description %}
 
-    <a href="{% url 'task_edit' task.id %}">Edit Task</a>
+        <div class="detail-section">
 
-    <br><br>
+            <h3>Description</h3>
 
-    <a href="{% url 'task_delete' task.id %}">Delete Task</a>
+            <p>
+                {{ task.description }}
+            </p>
 
-    <br><br>
+        </div>
 
-    <a href="{% url 'task_list' %}">← Back to Tasks</a>
+    {% endif %}
 
-</body>
-</html>
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+
+            <span class="detail-label">
+                Status
+            </span>
+
+            <span class="badge status-{{ task.status }}">
+                {{ task.get_status_display }}
+            </span>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span class="detail-label">
+                Priority
+            </span>
+
+            <span class="badge priority-{{ task.priority }}">
+                {{ task.get_priority_display }}
+            </span>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span class="detail-label">
+                Due Date
+            </span>
+
+            <span>
+                {% if task.due_date %}
+                    {{ task.due_date }}
+                {% else %}
+                    No due date
+                {% endif %}
+            </span>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span class="detail-label">
+                Created
+            </span>
+
+            <span>
+                {{ task.created_at }}
+            </span>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span class="detail-label">
+                Last Updated
+            </span>
+
+            <span>
+                {{ task.updated_at }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="detail-actions">
+
+        <a
+            href="{% url 'task_edit' task.id %}"
+            class="button primary-button"
+        >
+            Edit Task
+        </a>
+
+        <a
+            href="{% url 'task_delete' task.id %}"
+            class="button danger-button"
+        >
+            Delete Task
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

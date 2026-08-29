@@ -1,30 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Task</title>
-</head>
-<body>
+{% extends "tasks/base.html" %}
 
-    <h1>Create a Task</h1>
+{% block title %}Add Task{% endblock %}
 
-    <form method="POST">
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>Add New Task</h2>
+        <p class="page-subtitle">
+            Create a new task and keep track of your work.
+        </p>
+    </div>
+
+    <a href="{% url 'task_list' %}" class="button">
+        ← Back to Tasks
+    </a>
+
+</div>
+
+
+<div class="form-card">
+
+    <form method="post">
 
         {% csrf_token %}
 
         {{ form.as_p }}
 
-        <button type="submit">
-            Create Task
-        </button>
+        <div class="form-actions">
+
+            <button type="submit" class="button primary-button">
+                Create Task
+            </button>
+
+            <a href="{% url 'task_list' %}" class="button">
+                Cancel
+            </a>
+
+        </div>
 
     </form>
 
-    <br>
+</div>
 
-    <a href="{% url 'task_list' %}">
-        Back to Tasks
-    </a>
-
-</body>
-</html>
+{% endblock %}

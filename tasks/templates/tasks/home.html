@@ -1,18 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Personal Task Manager</title>
-</head>
-<body>
+{% extends "tasks/base.html" %}
 
-    <h1>Hello, {{ name }}!</h1>
+{% block title %}Your Tasks{% endblock %}
 
-    <a href="{% url 'task_create' %}">+ Add Task</a>
+{% block content %}
 
-    <a href="{% url 'dashboard' %}">Dashboard</a>
+<div class="page-header">
 
-    <form method="get">
+    <div>
+        <h2>Your Tasks</h2>
+        <p class="page-subtitle">
+            Manage and organize your personal tasks.
+        </p>
+    </div>
+
+    <a href="{% url 'task_create' %}" class="button primary-button">
+        + Add Task
+    </a>
+
+</div>
+
+
+<div class="filter-panel">
+
+    <form method="get" class="search-form">
 
         <input
             type="text"
@@ -21,108 +31,192 @@
             value="{{ request.GET.search|default:'' }}"
         >
 
-        <button type="submit">Search</button>
+        <button type="submit" class="button">
+            Search
+        </button>
 
     </form>
 
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
 
-    <h2>Your Tasks</h2>
+    <div class="filter-section">
 
-    <div>
-        <a href="{% url 'task_list' %}">All</a>
+        <strong>Status</strong>
 
-        <a href="?status=pending&search={{ request.GET.search }}">Pending</a>
+        <div class="filter-links">
 
-        <a href="?status=in_progress&search={{ request.GET.search }}">In Progress</a>
+            <a href="{% url 'task_list' %}">
+                All
+            </a>
 
-        <a href="?status=completed&search={{ request.GET.search }}">Completed</a>
+            <a href="?status=pending&search={{ request.GET.search }}">
+                Pending
+            </a>
+
+            <a href="?status=in_progress&search={{ request.GET.search }}">
+                In Progress
+            </a>
+
+            <a href="?status=completed&search={{ request.GET.search }}">
+                Completed
+            </a>
+
+        </div>
+
     </div>
 
-    <div>
-        <strong>Priority:</strong>
 
-        <a href="{% url 'task_list' %}">All</a>
+    <div class="filter-section">
 
-        <a href="?status={{ request.GET.status }}&priority=high&search={{ request.GET.search }}">High</a>
+        <strong>Priority</strong>
 
-        <a href="?status={{ request.GET.status }}&priority=medium&search={{ request.GET.search }}">Medium</a>
+        <div class="filter-links">
 
-        <a href="?status={{ request.GET.status }}&priority=low&search={{ request.GET.search }}">Low</a>
+            <a href="{% url 'task_list' %}">
+                All
+            </a>
+
+            <a href="?status={{ request.GET.status }}&priority=high&search={{ request.GET.search }}">
+                High
+            </a>
+
+            <a href="?status={{ request.GET.status }}&priority=medium&search={{ request.GET.search }}">
+                Medium
+            </a>
+
+            <a href="?status={{ request.GET.status }}&priority=low&search={{ request.GET.search }}">
+                Low
+            </a>
+
+        </div>
+
     </div>
 
-    <div>
-        <strong>Sort:</strong>
 
-        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=oldest">
-            Oldest First
-        </a>
+    <div class="filter-section">
 
-        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=due_date">
-            Due Date
-        </a>
+        <strong>Sort</strong>
 
-        <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=newest">
-            Newest First
-        </a>
+        <div class="filter-links">
 
-        <a href="{% url 'task_list' %}">Clear Filters</a>
+            <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=oldest">
+                Oldest First
+            </a>
+
+            <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=due_date">
+                Due Date
+            </a>
+
+            <a href="?status={{ request.GET.status }}&priority={{ request.GET.priority }}&search={{ request.GET.search }}&sort=newest">
+                Newest First
+            </a>
+
+            <a href="{% url 'task_list' %}">
+                Clear Filters
+            </a>
+
+        </div>
+
     </div>
 
-    {% if tasks %}
+</div>
 
-        <ul>
-            {% for task in tasks %}
-                <li>
-                    {% if task.status == "completed" %}
-                        <del>
-                            <a href="{% url 'task_detail' task.id %}">
-                                {{ task.title }}
-                            </a>
-                        </del>
-                    {% else %}
-                        <a href="{% url 'task_detail' task.id %}">
-                            {{ task.title }}
-                        </a>
+
+{% if tasks %}
+
+    <div class="task-list">
+
+        {% for task in tasks %}
+
+            <div class="task-card">
+
+                <div class="task-card-main">
+
+                    <a
+                        href="{% url 'task_detail' task.id %}"
+                        class="task-title"
+                    >
+                        {{ task.title }}
+                    </a>
+
+                    {% if task.description %}
+                        <p class="task-description">
+                            {{ task.description|truncatewords:20 }}
+                        </p>
                     {% endif %}
 
-                    — {{ task.get_priority_display }}
+                </div>
 
-                    — {{ task.get_status_display }}
+
+                <div class="task-card-meta">
+
+                    <span class="badge priority-{{ task.priority }}">
+                        {{ task.get_priority_display }}
+                    </span>
+
+                    <span class="badge status-{{ task.status }}">
+                        {{ task.get_status_display }}
+                    </span>
 
                     {% if task.due_date %}
-                        — Due: {{ task.due_date }}
-                    {% else %}
-                        — No due date
+
+                        <span class="task-due-date">
+                            Due: {{ task.due_date }}
+                        </span>
+
                     {% endif %}
 
-                    {% if task.is_overdue %}
-                        — ⚠ Overdue
-                    {% endif %}
+                </div>
 
-                    <form method="POST"
+
+                <div class="task-card-actions">
+
+                    <form
+                        method="POST"
                         action="{% url 'task_toggle_status' task.id %}"
-                        style="display: inline;">
+                    >
+
                         {% csrf_token %}
 
                         {% if task.status == "completed" %}
-                            <button type="submit">Mark Pending</button>
+
+                            <button type="submit" class="button">
+                                Mark Pending
+                            </button>
+
                         {% else %}
-                            <button type="submit">Mark Complete</button>
+
+                            <button type="submit" class="button">
+                                Mark Complete
+                            </button>
+
                         {% endif %}
+
                     </form>
-                </li>
-            {% endfor %}
-        </ul>
 
-    {% else %}
+                </div>
 
-        <p>You have no tasks.</p>
+            </div>
 
-    {% endif %}
+        {% endfor %}
 
-</body>
-</html>
+    </div>
+
+{% else %}
+
+    <div class="empty-state">
+
+        <h3>No tasks found</h3>
+
+        <p>
+            Try changing your filters or create a new task.
+        </p>
+
+        <a href="{% url 'task_create' %}" class="button primary-button">
+            + Create Task
+        </a>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

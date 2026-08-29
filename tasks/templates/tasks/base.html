@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Personal Task Manager{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'tasks/css/style.css' %}">
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="navbar-container">
+
+            <a href="{% url 'task_list' %}" class="brand">
+                Personal Task Manager
+            </a>
+
+            {% if user.is_authenticated %}
+
+                <nav class="nav-links">
+
+                    <a href="{% url 'task_list' %}">
+                        Tasks
+                    </a>
+
+                    <a href="{% url 'dashboard' %}">
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'task_create' %}">
+                        + Add Task
+                    </a>
+
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+
+                        <button type="submit" class="logout-button">
+                            Logout
+                        </button>
+                    </form>
+
+                </nav>
+
+            {% endif %}
+
+        </div>
+
+    </header>
+
+
+    <main class="main-container">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+</body>
+
+</html>

@@ -1,38 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Delete {{ task.title }}</title>
-</head>
-<body>
+{% extends "tasks/base.html" %}
 
-    <h1>Delete Task</h1>
+{% block title %}Delete Task{% endblock %}
+
+{% block content %}
+
+<div class="danger-card">
+
+    <div class="danger-icon">
+        !
+    </div>
+
+    <h2>Delete Task?</h2>
 
     <p>
-        Are you sure you want to delete:
+        Are you sure you want to delete
+        <strong>"{{ task.title }}"</strong>?
     </p>
 
-    <h2>{{ task.title }}</h2>
-
-    <p>
+    <p class="warning-text">
         This action cannot be undone.
     </p>
 
-    <form method="POST">
+    <form method="post" class="danger-actions">
 
         {% csrf_token %}
 
-        <button type="submit">
+        <button type="submit" class="button danger-button">
             Yes, Delete Task
         </button>
 
+        <a
+            href="{% url 'task_detail' task.id %}"
+            class="button"
+        >
+            Cancel
+        </a>
+
     </form>
 
-    <br>
+</div>
 
-    <a href="{% url 'task_detail' task.id %}">
-        Cancel
-    </a>
-
-</body>
-</html>
+{% endblock %}

@@ -1,298 +1,242 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "tasks/base.html" %}
 
-    <title>Dashboard | Personal Task Manager</title>
+{% block title %}Dashboard{% endblock %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f5f5;
-        }
+{% block content %}
 
-        .container {
-            max-width: 1000px;
-            margin: auto;
-        }
+<div class="page-header">
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    <div>
+        <h2>Dashboard</h2>
+        <p class="page-subtitle">
+            Overview of your tasks.
+        </p>
+    </div>
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
+    <a href="{% url 'task_create' %}" class="button primary-button">
+        + Add Task
+    </a>
 
-        @media (max-width: 800px) {
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+</div>
 
-        @media (max-width: 500px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
 
-            body {
-                margin: 20px;
-            }
+<!-- Statistics -->
 
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-        }
+<div class="stats-grid">
 
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            margin: 0 0 10px;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .section {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 10px;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        .navigation {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="header">
-        <h1>Welcome to your Dashboard</h1>
+    <div class="stat-card">
+        <div class="stat-label">Total Tasks</div>
+        <div class="stat-value">{{ total_tasks }}</div>
 
         <a href="{% url 'task_list' %}">
-            View Tasks
+            View Tasks →
         </a>
     </div>
 
 
-    <!-- Statistics -->
-
-    <div class="stats">
-
-        <div class="stat-card">
-            <h3>Total</h3>
-            <div class="stat-number">
-                {{ total_tasks }}
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <h3>Pending</h3>
-            <div class="stat-number">
-                {{ pending_tasks }}
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <h3>In Progress</h3>
-            <div class="stat-number">
-                {{ in_progress_tasks }}
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <h3>Completed</h3>
-            <div class="stat-number">
-                {{ completed_tasks }}
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <h3>High Priority</h3>
-            <div class="stat-number">
-                {{ high_priority_tasks }}
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- Overdue Tasks -->
-
-    <div class="section">
-
-        <h2>Overdue Tasks</h2>
-
-        {% if overdue_tasks %}
-
-            <ul>
-
-                {% for task in overdue_tasks %}
-
-                    <li>
-                        <a href="{% url 'task_detail' task.id %}">
-                            {{ task.title }}
-                        </a>
-
-                        — {{ task.get_priority_display }}
-                        — {{ task.get_status_display }}
-                    </li>
-
-                {% endfor %}
-
-            </ul>
-
-        {% else %}
-
-            <p>No overdue tasks.</p>
-
-        {% endif %}
-
-    </div>
-
-
-    <!-- Due Today -->
-
-    <div class="section">
-
-        <h2>Due Today</h2>
-
-        {% if today_tasks %}
-
-            <ul>
-
-                {% for task in today_tasks %}
-
-                    <li>
-                        <a href="{% url 'task_detail' task.id %}">
-                            {{ task.title }}
-                        </a>
-
-                        — {{ task.get_priority_display }}
-                        — {{ task.get_status_display }}
-                    </li>
-
-                {% endfor %}
-
-            </ul>
-
-        {% else %}
-
-            <p>No tasks due today.</p>
-
-        {% endif %}
-
-    </div>
-
-
-    <!-- Active Tasks -->
-
-    <div class="section">
-
-        <h2>Active Tasks</h2>
-
-        {% if active_tasks %}
-
-            <ul>
-
-                {% for task in active_tasks %}
-
-                    <li>
-                        <a href="{% url 'task_detail' task.id %}">
-                            {{ task.title }}
-                        </a>
-
-                        — {{ task.get_priority_display }}
-                        — {{ task.get_status_display }}
-                    </li>
-
-                {% endfor %}
-
-            </ul>
-
-        {% else %}
-
-            <p>No active tasks.</p>
-
-        {% endif %}
-
-    </div>
-
-
-    <!-- Recently Completed -->
-
-    <div class="section">
-
-        <h2>Recently Completed</h2>
-
-        {% if completed_task_list %}
-
-            <ul>
-
-                {% for task in completed_task_list %}
-
-                    <li>
-                        <a href="{% url 'task_detail' task.id %}">
-                            {{ task.title }}
-                        </a>
-
-                        — Completed
-                    </li>
-
-                {% endfor %}
-
-            </ul>
-
-        {% else %}
-
-            <p>No completed tasks yet.</p>
-
-        {% endif %}
-
-    </div>
-
-
-    <div class="navigation">
-
-        <a href="{% url 'task_create' %}">
-            + Add New Task
+    <div class="stat-card">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value">{{ pending_tasks }}</div>
+
+        <a href="{% url 'task_list' %}?status=pending">
+            View Pending →
         </a>
+    </div>
 
+
+    <div class="stat-card">
+        <div class="stat-label">In Progress</div>
+        <div class="stat-value">{{ in_progress_tasks }}</div>
+
+        <a href="{% url 'task_list' %}?status=in_progress">
+            View In Progress →
+        </a>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value">{{ completed_tasks }}</div>
+
+        <a href="{% url 'task_list' %}?status=completed">
+            View Completed →
+        </a>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-label">High Priority</div>
+        <div class="stat-value">{{ high_priority_tasks }}</div>
+
+        <a href="{% url 'task_list' %}?priority=high">
+            View High Priority →
+        </a>
     </div>
 
 </div>
 
-</body>
-</html>
+
+<!-- Today's Tasks -->
+
+<div class="dashboard-section">
+
+    <h3>Today's Tasks</h3>
+
+    {% if today_tasks %}
+
+        <div class="dashboard-task-list">
+
+            {% for task in today_tasks %}
+
+                <a
+                    href="{% url 'task_detail' task.id %}"
+                    class="dashboard-task"
+                >
+                    <span>
+                        {{ task.title }}
+                    </span>
+
+                    <span class="badge priority-{{ task.priority }}">
+                        {{ task.get_priority_display }}
+                    </span>
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="muted-text">
+            No tasks due today.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+<!-- Overdue Tasks -->
+
+<div class="dashboard-section">
+
+    <h3>Overdue Tasks</h3>
+
+    {% if overdue_tasks %}
+
+        <div class="dashboard-task-list">
+
+            {% for task in overdue_tasks %}
+
+                <a
+                    href="{% url 'task_detail' task.id %}"
+                    class="dashboard-task"
+                >
+                    <span>
+                        {{ task.title }}
+                    </span>
+
+                    <span class="task-due-date">
+                        Due: {{ task.due_date }}
+                    </span>
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="muted-text">
+            No overdue tasks.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+<!-- Active Tasks -->
+
+<div class="dashboard-section">
+
+    <h3>Active Tasks</h3>
+
+    {% if active_tasks %}
+
+        <div class="dashboard-task-list">
+
+            {% for task in active_tasks %}
+
+                <a
+                    href="{% url 'task_detail' task.id %}"
+                    class="dashboard-task"
+                >
+
+                    <span>
+                        {{ task.title }}
+                    </span>
+
+                    <span class="badge status-{{ task.status }}">
+                        {{ task.get_status_display }}
+                    </span>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="muted-text">
+            No active tasks.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+<!-- Completed Tasks -->
+
+<div class="dashboard-section">
+
+    <h3>Recently Completed</h3>
+
+    {% if completed_task_list %}
+
+        <div class="dashboard-task-list">
+
+            {% for task in completed_task_list %}
+
+                <a
+                    href="{% url 'task_detail' task.id %}"
+                    class="dashboard-task"
+                >
+
+                    <span>
+                        {{ task.title }}
+                    </span>
+
+                    <span class="badge status-completed">
+                        Completed
+                    </span>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="muted-text">
+            No completed tasks yet.
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

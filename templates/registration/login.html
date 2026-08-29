@@ -1,27 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - Personal Task Manager</title>
-</head>
-<body>
+{% extends "tasks/base.html" %}
 
-    <h1>Personal Task Manager</h1>
+{% block title %}Login{% endblock %}
 
-    <h2>Login</h2>
+{% block content %}
 
-    <form method="post">
-        {% csrf_token %}
+<div class="auth-container">
 
-        {{ form.as_p }}
+    <div class="auth-card">
 
-        <button type="submit">Login</button>
-    </form>
+        <h2>Welcome Back</h2>
 
-    <p>
-        Don't have an account?
-        <a href="{% url 'signup' %}">Sign Up</a>
-    </p>
+        <p class="auth-subtitle">
+            Login to manage your tasks.
+        </p>
 
-</body>
-</html>
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input
+                type="hidden"
+                name="next"
+                value="{{ next }}"
+            >
+
+            <button type="submit" class="button primary-button auth-button">
+                Login
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account?
+            <a href="{% url 'signup' %}">Sign Up</a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}
