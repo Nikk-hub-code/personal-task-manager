@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from .models import Task
 from .forms import TaskForm
+
 
 @login_required
 def task_list(request):
@@ -166,3 +169,21 @@ def task_toggle_status(request, task_id):
         task.save()
 
     return redirect("task_list")
+
+
+def signup(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("task_list")
+    else:
+        form = UserCreationForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, "registration/signup.html", context)
