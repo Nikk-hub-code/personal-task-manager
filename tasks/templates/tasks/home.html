@@ -81,6 +81,18 @@
                         {{ task.title }}
                     </a>
                     — {{ task.get_priority_display }}
+
+                    <form method="POST"
+                        action="{% url 'task_toggle_status' task.id %}"
+                        style="display: inline;">
+                        {% csrf_token %}
+
+                        {% if task.status == "completed" %}
+                            <button type="submit">Mark Pending</button>
+                        {% else %}
+                            <button type="submit">Mark Complete</button>
+                        {% endif %}
+                    </form>
                 </li>
             {% endfor %}
         </ul>

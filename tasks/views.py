@@ -148,3 +148,21 @@ def task_delete(request, task_id):
         "tasks/task_confirm_delete.html",
         context
     )
+
+@login_required
+def task_toggle_status(request, task_id):
+    task = get_object_or_404(
+        Task,
+        id=task_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        if task.status == "completed":
+            task.status = "pending"
+        else:
+            task.status = "completed"
+
+        task.save()
+
+    return redirect("task_list")
