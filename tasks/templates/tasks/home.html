@@ -77,10 +77,31 @@
         <ul>
             {% for task in tasks %}
                 <li>
-                    <a href="{% url 'task_detail' task.id %}">
-                        {{ task.title }}
-                    </a>
+                    {% if task.status == "completed" %}
+                        <del>
+                            <a href="{% url 'task_detail' task.id %}">
+                                {{ task.title }}
+                            </a>
+                        </del>
+                    {% else %}
+                        <a href="{% url 'task_detail' task.id %}">
+                            {{ task.title }}
+                        </a>
+                    {% endif %}
+
                     — {{ task.get_priority_display }}
+
+                    — {{ task.get_status_display }}
+
+                    {% if task.due_date %}
+                        — Due: {{ task.due_date }}
+                    {% else %}
+                        — No due date
+                    {% endif %}
+
+                    {% if task.is_overdue %}
+                        — ⚠ Overdue
+                    {% endif %}
 
                     <form method="POST"
                         action="{% url 'task_toggle_status' task.id %}"

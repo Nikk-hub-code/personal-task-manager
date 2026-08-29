@@ -46,3 +46,15 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def is_overdue(self):
+        from django.utils import timezone
+
+        if not self.due_date:
+            return False
+
+        if self.status == "completed":
+            return False
+
+        return self.due_date < timezone.localdate()
